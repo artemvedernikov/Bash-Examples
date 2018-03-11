@@ -17,14 +17,17 @@ function show_help() {
 }
 
 function calculate_world_population() {
-# The keys are accessed using an exclamation point: ${!array[@]},
-# the values are accessed using ${array[@]}.
+  # The keys are accessed using an exclamation point: ${!array[@]},
+  # the values are accessed using ${array[@]}.
 
-  let WORLD_POPULATION=0
+  WORLD_POPULATION=0
   for i in "${!CONTINENTS_POPULATION[@]}"
   do
     # echo "key  : $i"
     # echo "value: ${CONTINENTS_POPULATION[$i]}"
+
+    # Double parentheses needed for arithmetic
+    # https://ryanstutorials.net/bash-scripting-tutorial/bash-arithmetic.php
     (( WORLD_POPULATION += ${CONTINENTS_POPULATION[$i]} ))
   done
   
@@ -46,16 +49,19 @@ while getopts ":h?c:" opt; do
   esac
 done
 
+# Check if argument is empty
 if [[ -z "$CONTINENT" ]]; then
   echo "Invalid command line parameters!"
   show_help
   exit 1
 fi
 
+# Regex like check
 if [[ $CONTINENT == *"America"* ]]; then
   echo "BTW, did you know that the six-continent combined-America model is often used in France and its former possessions, Italy, Portugal, Spain, Romania, Latin America, and Greece. (Wikipedia)"
 fi
 
+# String equality check
 if [ "$CONTINENT" == "world" ]; then
   echo "Getting world population"
   calculate_world_population
